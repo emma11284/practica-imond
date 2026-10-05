@@ -47,6 +47,176 @@ LEFT JOIN raw.product_category AS c ON c.category_id = p.category_id   -- catego
 LEFT JOIN raw.product_category AS f ON f.category_id = c.parent_id;    -- familia (categoría padre)
 
 
+-- Dimensión cliente
+CREATE TABLE dim_customer (
+    customer_key INTEGER PRIMARY KEY,
+    customer_id  INTEGER NOT NULL UNIQUE,
+    email        VARCHAR,
+    first_name   VARCHAR,
+    last_name    VARCHAR,
+    phone        VARCHAR,
+    status       VARCHAR,
+    created_at   TIMESTAMP
+);
+
+INSERT INTO dim_customer (
+    customer_key,
+    customer_id,
+    email,
+    first_name,
+    last_name,
+    phone,
+    status,
+    created_at
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY customer_id),
+    customer_id,
+    email,
+    first_name,
+    last_name,
+    phone,
+    status,
+    created_at
+FROM raw.customer;
+
+
+CREATE TABLE dim_channel (
+    channel_key INTEGER PRIMARY KEY,
+    channel_id INTEGER NOT NULL UNIQUE,
+    code VARCHAR,
+    name VARCHAR    
+);
+
+INSERT INTO dim_channel (
+    channel_key,
+    channel_id,
+    code,
+    name
+)
+
+SELECT
+    ROW_NUMBER() OVER (ORDER BY channel_id),
+    channel_id,
+    code,
+    name
+FROM raw.channel;
+
+
+-- Dimensión provincia
+CREATE TABLE dim_province (
+    province_key INTEGER PRIMARY KEY,
+    province_id  INTEGER NOT NULL UNIQUE,
+    name         VARCHAR,
+    code         VARCHAR
+);
+
+INSERT INTO dim_province (
+    province_key,
+    province_id,
+    name,
+    code
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY province_id),
+    province_id,
+    name,
+    code
+FROM raw.province;
+
+
+-- Dimensión tienda
+CREATE TABLE dim_store (
+    store_key   INTEGER PRIMARY KEY,
+    store_id    INTEGER NOT NULL UNIQUE,
+    name        VARCHAR,
+    city        VARCHAR,
+    province    VARCHAR,
+    postal_code VARCHAR
+);
+
+INSERT INTO dim_store (
+    store_key,
+    store_id,
+    name,
+    city,
+    province,
+    postal_code
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY s.store_id),
+    s.store_id,
+    s.name,
+    a.city,
+    p.name,
+    a.postal_code
+FROM raw.store AS s
+LEFT JOIN raw.address AS a
+    ON s.address_id = a.address_id
+LEFT JOIN raw.province AS p
+    ON a.province_id = p.province_id;
+
+
+-- Dimensión fecha
+CREATE TABLE dim_date (
+    date_key INTEGER PRIMARY KEY,
+    fecha    DATE NOT NULL UNIQUE,
+    anio     INTEGER,
+    mes      INTEGER,
+    dia      INTEGER,
+    trimestre INTEGER
+);
+
+INSERT INTO dim_date (
+    date_key,
+    fecha,
+    anio,
+    mes,
+    dia,
+    trimestre
+)
+SELECT
+    CAST(strftime(fecha, '%Y%m%d') AS INTEGER),
+    fecha,
+    year(fecha),
+    month(fecha),
+    day(fecha),
+    quarter(fecha)
+FROM (
+    SELECT CAST(range AS DATE) AS fecha
+    FROM range(
+        DATE '2023-03-02',
+        DATE '2025-10-01',
+        INTERVAL 1 DAY
+    )
+) AS calendario;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- ---------------------------------------------------------------------
 -- TU TURNO: el resto de las dimensiones
 -- ---------------------------------------------------------------------
