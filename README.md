@@ -7,6 +7,46 @@ El objetivo es construir un modelo estrella para analizar ventas
 online y en tiendas físicas, usuarios activos, ticket promedio,
 NPS, ventas por provincia y ranking mensual por producto.
 
+## Caso de negocio: del cliente al análisis comercial
+
+EcoBottle AR vende botellas reutilizables Classic A y Sport B
+a través de su tienda online y de cuatro tiendas físicas ubicadas
+en Buenos Aires, Córdoba, Santa Fe y Mendoza.
+
+El recorrido comercial comienza cuando un cliente realiza una
+compra. El pedido registra quién compra, por qué canal, en qué
+fecha y por qué importe. Su detalle identifica los productos,
+las cantidades, los precios y los descuentos aplicados.
+
+Luego se registran los pagos asociados al pedido. Cuando la compra
+requiere envío, también se registra su seguimiento, desde la salida
+hasta la entrega. La satisfacción se releva mediante encuestas NPS.
+Las respuestas disponibles identifican el canal y, cuando corresponde,
+el cliente, pero no permiten relacionarlas con un pedido específico.
+
+En paralelo, las sesiones web permiten analizar la actividad digital.
+Una visita puede pertenecer a un cliente identificado o ser anónima,
+y no implica necesariamente que se haya realizado una compra.
+
+### Cómo se representa este recorrido en los datos
+
+- Cliente y contexto de compra: dimensiones de cliente, producto,
+  canal, tienda, provincia y fecha.
+- Pedido: `fact_order`.
+- Productos del pedido: `fact_order_item`.
+- Pagos: `fact_payment`.
+- Envíos: `fact_shipment`.
+- Actividad digital: `fact_web_session`.
+- Satisfacción: `fact_nps_response`.
+
+Los datos originales se conservan en `raw/`. Las transformaciones
+SQL los organizan en un modelo estrella y generan los CSV de `dw/`,
+que sirven como fuente para Power BI.
+
+El dashboard utiliza estos datos para responder cuánto se vende,
+cuántos usuarios están activos, cuánto se gasta por pedido, qué
+satisfacción expresan los clientes, dónde se concentran las ventas
+y qué productos lideran cada mes.
 
 ## Origen de los datos
 
@@ -97,9 +137,18 @@ prefijos como `feat:`, `test:` y `docs:`.
 
 ## Dashboard
 
-Pendiente de desarrollo. Se incorporarán el enlace y las capturas
-del tablero terminado.
+Archivo: [EcoBottle Dashboard.pbix](EcoBottle%20Dashboard.pbix).
 
+Para visualizarlo, descargar el archivo y abrirlo con Power BI Desktop.
+
+El reporte contiene dos páginas:
+- Análisis de Venta por Productos.
+- Análisis de Usuarios y Clientes.
+
+Incluye filtros de fecha, canal, provincia y producto.
+El alcance de cada filtro depende de las relaciones del modelo.
+
+Pendiente: adaptar las medidas a SQL según las indicaciones que confirme el profesor y completar el selector de montos.
 
 ## Implementación del modelo estrella
 
@@ -303,6 +352,7 @@ Grano: un pedido.
 | tax_amount | DECIMAL(12,2) | Permite NULL | Importe del IVA |
 | shipping_fee | DECIMAL(12,2) | Permite NULL | Costo de envío |
 | total_amount | DECIMAL(12,2) | Permite NULL | Subtotal más IVA y envío |
+| amount_with_tax_without_shipping | DECIMAL(12,2) | Permite NULL | Importe con IVA y sin envío, calculado en SQL como total_amount - shipping_fee |
 
 #### fact_order_item
 
@@ -429,24 +479,75 @@ en la terminal.
 También se incluyen ventas diarias, usuarios activos diarios
 y NPS diario por canal para analizar su evolución temporal.
 
-### Validaciones realizadas
+## Validaciones de carga y consistencia
 
-- Las seis tablas de hechos conservaron la cantidad de filas
-  de sus respectivas tablas de origen.
-- Las sumas de importes de pedidos, ítems y pagos coinciden
-  entre RAW y DW.
-- No quedaron pedidos sin provincia en ninguno de los canales.
-- Las ventas por provincia suman el mismo importe que las
-  ventas totales.
+Las comprobaciones están en `sql/03_consultas.sql` y se ejecutan con:
 
-Estas comprobaciones verifican cantidades, importes y cobertura
-de provincias; no constituyen una validación exhaustiva de los datos.
+    python run_sql.py
 
+### Controles realizados
+
+| Control | Qué comprueba | Resultado esperado |
+|---|---|---|
+| Cantidad de registros | Compara las cantidades de pedidos, ítems, pagos, envíos, sesiones y respuestas NPS entre RAW y DW. | Igual cantidad en origen y destino. |
+| Correspondencia de identificadores | Busca registros de RAW que faltan en DW y registros de DW cuyo identificador no existe en RAW, en las seis tablas de hechos. | 0 faltantes y 0 registros sin origen. |
+| Importes acumulados | Compara las sumas de pedidos, ítems y pagos entre RAW y DW. | Igual importe en origen y destino. |
+| Importes por pedido | Compara individualmente subtotal, impuestos, envío y total de cada pedido con su registro original. | 0 diferencias. |
+| Importe con IVA y sin envío | Comprueba que la nueva columna sea igual a `total_amount - shipping_fee` del origen. | 0 diferencias. |
+| Composición del total | Verifica que `total_amount = subtotal + tax_amount + shipping_fee` y que esos importes no sean nulos. | 0 pedidos inconsistentes. |
+| Composición del importe del ítem | Verifica que `line_total = quantity * unit_price - discount_amount` y que los componentes no sean nulos. | 0 ítems inconsistentes. |
+| Conciliación de pedidos e ítems | Busca pedidos sin ítems y compara el subtotal de cada pedido con la suma de sus líneas. Incluye todos los estados. | 0 pedidos sin ítems y 0 diferencias. |
+| Asignación de dimensiones en pedidos | Busca clientes, canales, fechas, tiendas y provincias presentes en el origen que quedaron sin clave en el DW. | 0 asignaciones perdidas. |
+| Clientes de sesiones y NPS | Busca registros con cliente identificado en RAW que quedaron sin cliente en DW. | 0 asignaciones perdidas. |
+| Fechas de pedidos, sesiones y NPS | Compara la fecha de la dimensión con el día del evento original. | 0 diferencias. |
+| Puntajes NPS | Compara cada puntaje del DW con su respuesta original. | 0 diferencias. |
+
+Los controles agregados de correspondencia, importes individuales,
+coherencia, conciliación, asignaciones, fechas y puntajes devolvieron
+0 incidencias en la ejecución realizada.
+
+### Interpretación de valores vacíos
+
+- Un pedido online puede no tener tienda: si el dato ya está vacío en
+  RAW, no se considera una asignación perdida.
+- Las sesiones web y respuestas NPS pueden ser anónimas. Un cliente
+  vacío en el origen es válido; un cliente identificado en RAW que
+  queda vacío en DW requiere revisión.
+- La consulta de pedidos sin provincia presenta los casos por canal.
+  Su resultado debe interpretarse según la disponibilidad de la
+  dirección de envío; no demuestra por sí solo un error de carga.
+
+### Alcance
+
+Los conteos y sumas generales se complementan con controles por
+identificador y por pedido, ya que dos totales iguales pueden ocultar
+diferencias que se compensan.
+
+Estas verificaciones cubren la presencia de registros y las reglas
+detalladas arriba. No certifican la exactitud de los datos del sistema
+de origen ni constituyen una auditoría exhaustiva de todos los campos.
+
+La comparación de los KPIs de SQL con los visuales de Power BI bajo
+los mismos filtros queda pendiente.
+
+### Comparación de KPIs entre RAW y DW
+
+Se calcularon los indicadores desde el origen y desde el modelo
+estrella, aplicando las mismas reglas:
+
+- Ventas, cantidad de pedidos y ticket promedio: diferencia 0.
+- Usuarios activos: 73.828 en ambos, diferencia 0.
+- NPS: 30,0032 en ambos, diferencia 0.
+- Ventas por provincia: las cuatro provincias coinciden.
+- Ranking mensual por producto: coinciden los importes y puestos
+  de las 42 combinaciones de mes y producto.
+
+La comparación con Power BI bajo los mismos filtros queda pendiente.
 
 ### Diagrama del modelo estrella
 
-El diagrama generado se encuentra en
-[dw/modelo_estrella.md](dw/modelo_estrella.md).
+El diagrama se genera localmente en `dw/modelo_estrella.md`
+al ejecutar `python run_sql.py`.
 
-Se actualiza al ejecutar `python run_sql.py`.
-
+Para visualizarlo, abrir el archivo en VS Code con la extensión
+Markdown Preview Mermaid Support y presionar Ctrl + Shift + V.
