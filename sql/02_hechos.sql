@@ -24,9 +24,6 @@
 -- DuckDB rechaza la carga y run_sql.py te muestra el error.
 -- =====================================================================
 
-
--- TU TURNO: creá acá las tablas de hechos.
-
 -- Hecho Pedido
 CREATE TABLE fact_order (
     order_id     BIGINT PRIMARY KEY,
@@ -34,7 +31,7 @@ CREATE TABLE fact_order (
     channel_key  INTEGER NOT NULL,
     date_key     INTEGER NOT NULL,
     store_key    INTEGER,
-    province_key INTEGER 
+    province_key INTEGER
         REFERENCES dim_province(province_key),
     status       VARCHAR,
     currency_code VARCHAR,
@@ -42,6 +39,9 @@ CREATE TABLE fact_order (
     tax_amount   DECIMAL(12,2),
     shipping_fee DECIMAL(12,2),
     total_amount DECIMAL(12,2),
+
+    -- Importe con IVA, sin costo de envío.
+    amount_with_tax_without_shipping DECIMAL(12,2),
 
     FOREIGN KEY (customer_key)
         REFERENCES dim_customer(customer_key),
@@ -66,7 +66,8 @@ SELECT
     o.subtotal,
     o.tax_amount,
     o.shipping_fee,
-    o.total_amount
+    o.total_amount,
+    o.total_amount - o.shipping_fee
 FROM raw.sales_order AS o
 LEFT JOIN dim_customer AS c
     ON o.customer_id = c.customer_id
@@ -74,11 +75,11 @@ LEFT JOIN dim_channel AS ch
     ON o.channel_id = ch.channel_id
 LEFT JOIN dim_date AS d
     ON CAST(o.order_date AS DATE) = d.fecha
-LEFT JOIN dim_store s 
+LEFT JOIN dim_store AS s
     ON o.store_id = s.store_id
-LEFT JOIN raw.address AS a 
+LEFT JOIN raw.address AS a
     ON o.shipping_address_id = a.address_id
-LEFT JOIN dim_province AS pr 
+LEFT JOIN dim_province AS pr
     ON a.province_id = pr.province_id;
 
 
@@ -297,3 +298,4 @@ LEFT JOIN dim_channel AS ch
     ON n.channel_id = ch.channel_id
 LEFT JOIN dim_date AS d 
     ON CAST(n.responded_at AS DATE) = d.fecha;
+

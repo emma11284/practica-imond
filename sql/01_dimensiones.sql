@@ -11,7 +11,6 @@
 -- Para explorarlas antes de escribir nada:  python run_sql.py --explorar
 -- =====================================================================
 
-
 -- ---------------------------------------------------------------------
 -- EJEMPLO RESUELTO: dimensión producto
 -- ---------------------------------------------------------------------
@@ -22,6 +21,27 @@
 -- product_key es la clave SUBROGADA: un número propio del data warehouse.
 -- product_id es la clave NATURAL: el ID que viene del sistema de origen.
 -- Las tablas de hechos usan product_key; product_id sirve para encontrarla.
+
+
+
+
+
+-- ---------------------------------------------------------------------
+-- TU TURNO: el resto de las dimensiones
+-- ---------------------------------------------------------------------
+-- Pensá qué preguntas tiene que responder el dashboard (por fecha, canal,
+-- provincia, producto, cliente, tienda...) y creá una dimensión para cada una.
+--
+-- Tips:
+--   * Generar todas las fechas entre dos días:
+--       SELECT CAST(range AS DATE) AS fecha
+--       FROM range(DATE '2024-01-01', DATE '2025-10-01', INTERVAL 1 DAY);
+--   * Partes de una fecha: year(fecha), month(fecha), monthname(fecha), dayname(fecha)
+--   * Clave numérica para una fecha (ej. 20240131):
+--       CAST(strftime(fecha, '%Y%m%d') AS INTEGER)
+--   * Si algo puede venir vacío (ej. NPS anónimos, sin cliente), podés agregar
+--     una fila "Desconocido" con clave -1 y usar COALESCE(clave, -1) en los hechos.
+
 
 CREATE TABLE dim_product (
     product_key INTEGER PRIMARY KEY,
@@ -43,8 +63,10 @@ SELECT
     f.name AS family,
     p.list_price
 FROM raw.product AS p
-LEFT JOIN raw.product_category AS c ON c.category_id = p.category_id   -- categoría
-LEFT JOIN raw.product_category AS f ON f.category_id = c.parent_id;    -- familia (categoría padre)
+LEFT JOIN raw.product_category AS c 
+    ON c.category_id = p.category_id   -- categoría
+LEFT JOIN raw.product_category AS f 
+    ON f.category_id = c.parent_id;    -- familia (categoría padre)
 
 
 -- Dimensión cliente
@@ -185,50 +207,10 @@ SELECT
 FROM (
     SELECT CAST(range AS DATE) AS fecha
     FROM range(
-        DATE '2023-03-02',
+        DATE '2024-01-01',
         DATE '2025-10-01',
         INTERVAL 1 DAY
     )
 ) AS calendario;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- ---------------------------------------------------------------------
--- TU TURNO: el resto de las dimensiones
--- ---------------------------------------------------------------------
--- Pensá qué preguntas tiene que responder el dashboard (por fecha, canal,
--- provincia, producto, cliente, tienda...) y creá una dimensión para cada una.
---
--- Tips:
---   * Generar todas las fechas entre dos días:
---       SELECT CAST(range AS DATE) AS fecha
---       FROM range(DATE '2024-01-01', DATE '2025-10-01', INTERVAL 1 DAY);
---   * Partes de una fecha: year(fecha), month(fecha), monthname(fecha), dayname(fecha)
---   * Clave numérica para una fecha (ej. 20240131):
---       CAST(strftime(fecha, '%Y%m%d') AS INTEGER)
---   * Si algo puede venir vacío (ej. NPS anónimos, sin cliente), podés agregar
---     una fila "Desconocido" con clave -1 y usar COALESCE(clave, -1) en los hechos.

@@ -149,4 +149,58 @@ erDiagram
         VARCHAR source
         VARCHAR device
     }
+    mart_nps_periodos {
+        VARCHAR periodo
+        VARCHAR canal
+        BIGINT anio
+        BIGINT numero_mes
+        VARCHAR nombre_mes
+        BIGINT total_respuestas
+        BIGINT promotores
+        BIGINT pasivos
+        BIGINT detractores
+        DOUBLE porcentaje_promotores
+        DOUBLE porcentaje_pasivos
+        DOUBLE porcentaje_detractores
+        DOUBLE nps
+    }
+    mart_sesiones_fuente_diarias {
+        INTEGER date_key
+        VARCHAR fuente
+        BIGINT cantidad_sesiones
+    }
+    mart_ticket_periodos {
+        VARCHAR periodo
+        VARCHAR canal
+        VARCHAR provincia
+        HUGEINT pedidos_vendidos
+        DECIMAL ventas_totales
+        DOUBLE ticket_promedio
+    }
+    mart_usuarios_periodos {
+        VARCHAR periodo
+        BIGINT anio
+        BIGINT numero_mes
+        VARCHAR nombre_mes
+        BIGINT clientes_identificados
+        BIGINT sesiones_anonimas
+        BIGINT usuarios_activos
+    }
+    mart_ventas_diarias {
+        INTEGER date_key
+        INTEGER channel_key
+        INTEGER province_key
+        BIGINT pedidos_vendidos
+        DECIMAL ventas_con_iva_y_envio
+        DECIMAL ventas_con_iva_sin_envio
+        DECIMAL ventas_sin_iva_ni_envio
+    }
+    mart_ventas_producto_diarias {
+        INTEGER date_key
+        INTEGER product_key
+        INTEGER channel_key
+        INTEGER province_key
+        HUGEINT unidades_vendidas
+        DECIMAL ventas_producto
+    }
 ```

@@ -1,0 +1,5 @@
+store_key,store_id,name,city,province,postal_code
+1,1,Tienda BA,La Plata,Buenos Aires,1900
+2,2,Tienda CBA,Córdoba,Córdoba,5000
+3,3,Tienda SF,Rosario,Santa Fe,2000
+4,4,Tienda MZA,Mendoza,Mendoza,5500
