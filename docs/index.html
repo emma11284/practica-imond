@@ -4,116 +4,496 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>EcoBottle — Dashboard comercial</title>
+    <meta
+        name="description"
+        content="EcoBottle en cifras: ventas, productos, actividad digital
+        y experiencia de clientes."
+    >
+
+    <title>EcoBottle en cifras</title>
 
     <link rel="stylesheet" href="./styles.css">
     <script src="./app.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <h1>EcoBottle</h1>
-        <p>Dashboard de análisis comercial</p>
-        <p>
-            Datos del 1 de enero de 2024 al 30 de septiembre de 2025
-            · Importes en ARS
-        </p>
-    </header>
+    <a class="saltar-contenido" href="#contenido">Ir al contenido</a>
 
-    <section class="filtros" aria-label="Filtros del dashboard">
-        <div>
-            <label for="filtro-periodo">Período de análisis</label>
-            <select id="filtro-periodo">
-                <option value="Todo el período">Todo el período</option>
-            </select>
+    <aside class="sidebar" aria-label="Navegación del dashboard">
+        <a class="logo-panel" href="#resumen" aria-label="EcoBottle, inicio">
+            <img src="./logo.png" alt="EcoBottle">
+        </a>
+
+        <div class="sidebar-presentacion">
+            <span class="etiqueta-sidebar">ECOBOTTLE AR</span>
+            <p>El negocio, en cifras.</p>
         </div>
 
-        <div>
-            <label for="filtro-canal">Canal de venta</label>
-            <select id="filtro-canal">
-                <option value="Todos los canales">Todos los canales</option>
-            </select>
+        <nav class="menu" aria-label="Secciones">
+            <a href="#resumen">
+                <span class="numero-menu">01</span> Panorama general
+            </a>
+
+            <a href="#ventas">
+                <span class="numero-menu">02</span> Ventas y territorio
+            </a>
+
+            <a href="#productos">
+                <span class="numero-menu">03</span> Productos
+            </a>
+
+            <a href="#usuarios">
+                <span class="numero-menu">04</span> Actividad digital
+            </a>
+
+            <a href="#clientes">
+                <span class="numero-menu">05</span> Opinión de clientes
+            </a>
+
+            <a href="#arquitectura">
+                <span class="numero-menu">06</span> Detrás de los datos
+            </a>
+        </nav>
+
+        <div class="sidebar-pie">
+            <span class="estado-datos">
+                <i aria-hidden="true"></i> Datos de muestra
+            </span>
+            <p>Proyecto académico · EcoBottle AR</p>
+            <p>Corte: septiembre de 2025</p>
+        </div>
+    </aside>
+
+    <main id="contenido" class="contenido">
+        <div class="barra-superior">
+            <span>ECOBOTTLE EN CIFRAS</span>
+            <span class="insignia">Online + tiendas físicas</span>
         </div>
 
-        <div>
-            <label for="filtro-provincia">Provincia</label>
-            <select id="filtro-provincia">
-                <option value="Todas las provincias">
-                    Todas las provincias
-                </option>
-            </select>
-        </div>
+        <header class="hero" id="inicio">
+            <div class="hero-contenido">
+                <span class="sobre-titulo">UNA MIRADA AL NEGOCIO</span>
 
-        <button id="limpiar-filtros" type="button">
-            Limpiar filtros
-        </button>
-    </section>
+                <h1>
+                    Cada compra<br>
+                    <span>cuenta una historia.</span>
+                </h1>
 
-    <p class="aclaracion">
-        NPS responde a período y canal.
-        Usuarios activos responde únicamente al período.
-        Ticket promedio incluye IVA y envío.
-    </p>
+                <p class="hero-descripcion">
+                    Desde la primera visita hasta la recomendación:
+                    explorá las ventas, la actividad digital y las opiniones
+                    de quienes eligen EcoBottle. Un recorrido por el negocio
+                    online y sus tiendas físicas.
+                </p>
 
-    <main>
-        <section aria-labelledby="titulo-resumen">
-            <h2 id="titulo-resumen">Resumen ejecutivo</h2>
+                <div class="hero-datos">
+                    <span>01 ene 2024 — 30 sep 2025</span>
+                    <span>Importes en pesos argentinos</span>
+                </div>
+            </div>
+
+            <div class="hero-destacado">
+                <span class="hero-destacado-etiqueta">EL RECORRIDO ECOBOTTLE</span>
+
+                <h2>
+                    Del interés<br>
+                    a la compra.<br>
+                    <span>De la compra<br>a la recomendación.</span>
+                </h2>
+
+                <p>
+                    Distintas etapas del negocio,
+                    reunidas en una misma mirada.
+                </p>
+
+                <a href="#ventas">Recorrer los resultados <span>↓</span></a>
+            </div>
+        </header>
+
+        <section class="zona-filtros" aria-labelledby="titulo-filtros">
+            <div class="encabezado-filtros">
+                <div>
+                    <span class="sobre-titulo">TU PUNTO DE VISTA</span>
+                    <h2 id="titulo-filtros">Elegí por dónde empezar</h2>
+                </div>
+                <span class="nota-periodo">Meses completos o todo el período</span>
+            </div>
+
+            <div class="filtros">
+                <div>
+                    <label for="filtro-periodo">Período</label>
+                    <select id="filtro-periodo">
+                        <option value="Todo el período">Todo el período</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="filtro-canal">Canal</label>
+                    <select id="filtro-canal">
+                        <option value="Todos los canales">Todos los canales</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="filtro-provincia">Provincia</label>
+                    <select id="filtro-provincia">
+                        <option value="Todas las provincias">
+                            Todas las provincias
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="filtro-producto">Producto</label>
+                    <select id="filtro-producto">
+                        <option value="Todos los productos">
+                            Todos los productos
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="filtro-monto">Importe de ventas</label>
+                    <select id="filtro-monto">
+                        <option value="ventas_con_iva_y_envio">
+                            Con IVA y envío
+                        </option>
+                        <option value="ventas_con_iva_sin_envio">
+                            Con IVA, sin envío
+                        </option>
+                        <option value="ventas_sin_iva_ni_envio">
+                            Sin IVA ni envío
+                        </option>
+                    </select>
+                </div>
+
+                <button id="limpiar-filtros" type="button">
+                    Restablecer filtros
+                </button>
+            </div>
+
+            <details class="ayuda-filtros">
+                <summary>Cómo funcionan los filtros</summary>
+
+                <div class="ayuda-contenido">
+                    <p>
+                        <strong>Período:</strong> se aplica a todas
+                        las tarjetas y gráficos.
+                    </p>
+                    <p>
+                        <strong>Canal:</strong> modifica ventas, pedidos,
+                        ticket, productos y NPS. No modifica actividad web.
+                    </p>
+                    <p>
+                        <strong>Provincia:</strong> modifica ventas,
+                        pedidos, ticket y productos.
+                    </p>
+                    <p>
+                        <strong>Producto:</strong> filtra el ranking,
+                        sin modificar los pedidos completos.
+                    </p>
+                    <p>
+                        <strong>Importe:</strong> modifica Ventas y sus gráficos.
+                        Ticket conserva IVA y envío; productos se muestran
+                        sin ambos.
+                    </p>
+                </div>
+            </details>
+        </section>
+
+        <section class="seccion" id="resumen" aria-labelledby="titulo-resumen">
+            <div class="encabezado-seccion">
+                <div>
+                    <span class="sobre-titulo">01 / PANORAMA GENERAL</span>
+                    <h2 id="titulo-resumen">Una mirada al presente</h2>
+                </div>
+                <p>Indicadores del período seleccionado</p>
+            </div>
 
             <div class="tarjetas">
                 <article class="tarjeta">
-                    <h3>Ventas</h3>
+                    <div class="tarjeta-encabezado">
+                        <h3>Ventas</h3>
+                        <span class="icono-tarjeta" aria-hidden="true">$</span>
+                    </div>
                     <p id="valor-ventas">—</p>
-                    <small>
+                    <small id="detalle-ventas">
                         Pedidos pagados o completados. Con IVA y envío.
                     </small>
                 </article>
 
                 <article class="tarjeta">
-                    <h3>Pedidos vendidos</h3>
+                    <div class="tarjeta-encabezado">
+                        <h3>Pedidos vendidos</h3>
+                        <span class="icono-tarjeta" aria-hidden="true">#</span>
+                    </div>
                     <p id="valor-pedidos">—</p>
                     <small>Pedidos pagados o completados.</small>
                 </article>
 
                 <article class="tarjeta">
-                    <h3>Ticket promedio</h3>
+                    <div class="tarjeta-encabezado">
+                        <h3>Ticket promedio</h3>
+                        <span class="icono-tarjeta" aria-hidden="true">$</span>
+                    </div>
                     <p id="valor-ticket">—</p>
-                    <small>
-                        Importe promedio por pedido válido del período.
-                        Con IVA y envío.
-                    </small>
+                    <small>Promedio por pedido válido. Con IVA y envío.</small>
                 </article>
 
                 <article class="tarjeta">
-                    <h3>Usuarios activos</h3>
+                    <div class="tarjeta-encabezado">
+                        <h3>Usuarios activos*</h3>
+                        <span class="icono-tarjeta" aria-hidden="true">↗</span>
+                    </div>
                     <p id="valor-usuarios">—</p>
-                    <small>
-                        Clientes identificados distintos + sesiones anónimas.
-                        No representa personas únicas.
-                    </small>
+                    <small>Identificados distintos + sesiones anónimas.</small>
                 </article>
 
                 <article class="tarjeta">
-                    <h3>NPS</h3>
+                    <div class="tarjeta-encabezado">
+                        <h3>NPS</h3>
+                        <span class="icono-tarjeta" aria-hidden="true">♡</span>
+                    </div>
                     <p id="valor-nps">—</p>
-                    <small>
-                        Porcentaje de promotores menos porcentaje de
-                        detractores. Escala de −100 a 100 puntos.
-                    </small>
+                    <small>Recomendación del cliente · −100 a 100 puntos.</small>
+                </article>
+            </div>
+
+            <p class="nota-seccion">
+                * El indicador combinado no representa personas únicas.
+            </p>
+        </section>
+
+        <section class="seccion" id="ventas" aria-labelledby="titulo-ventas">
+            <div class="encabezado-seccion">
+                <div>
+                    <span class="sobre-titulo">02 / VENTAS Y TERRITORIO</span>
+                    <h2 id="titulo-ventas">El recorrido de nuestras ventas</h2>
+                </div>
+                <p>Cuándo se vende y hacia dónde llegan los pedidos</p>
+            </div>
+
+            <div class="grilla-graficos">
+                <article class="panel-grafico">
+                    <div class="encabezado-panel">
+                        <h3>Ventas a lo largo del tiempo</h3>
+                        <span class="chip">ARS</span>
+                    </div>
+
+                    <p id="detalle-ventas-mensuales">
+                        Pedidos válidos · Con IVA y envío · Millones de ARS
+                    </p>
+
+                    <div class="leyenda">
+                        <span><i class="color-2024"></i>2024</span>
+                        <span><i class="color-2025"></i>2025</span>
+                    </div>
+
+                    <div id="grafico-ventas" aria-live="polite"></div>
+                </article>
+
+                <article class="panel-grafico">
+                    <div class="encabezado-panel">
+                        <h3>La huella de las ventas</h3>
+                        <span class="chip">Provincias</span>
+                    </div>
+
+                    <p id="detalle-provincias">
+                        Provincia de la dirección de envío.
+                        Pedidos válidos · Con IVA y envío.
+                    </p>
+
+                    <div id="grafico-provincias" aria-live="polite"></div>
                 </article>
             </div>
         </section>
 
-        <section class="panel-grafico">
-            <h2>Evolución mensual de ventas</h2>
-            <p>Pedidos pagados o completados · Con IVA y envío</p>
-
-            <div class="leyenda">
-                <span><i class="color-2024"></i>2024</span>
-                <span><i class="color-2025"></i>2025</span>
+        <section class="seccion" id="productos"
+                 aria-labelledby="titulo-productos">
+            <div class="encabezado-seccion">
+                <div>
+                    <span class="sobre-titulo">03 / PRODUCTOS</span>
+                    <h2 id="titulo-productos">Dos botellas, distintas elecciones</h2>
+                </div>
+                <p>Classic A y Sport B</p>
             </div>
 
-            <div id="grafico-ventas" aria-live="polite"></div>
+            <article class="panel-grafico panel-productos">
+                <div class="encabezado-panel">
+                    <h3 id="titulo-ranking">Ranking de productos</h3>
+                    <span class="chip">Productos</span>
+                </div>
+
+                <p>
+                    Importe neto de descuentos, sin IVA ni envío.
+                    Elegí un mes para consultar el ranking mensual.
+                </p>
+
+                <div id="grafico-productos" aria-live="polite"></div>
+            </article>
         </section>
+
+        <section class="seccion" id="usuarios"
+                 aria-labelledby="titulo-usuarios">
+            <div class="encabezado-seccion">
+                <div>
+                    <span class="sobre-titulo">04 / ACTIVIDAD DIGITAL</span>
+                    <h2 id="titulo-usuarios">Antes del carrito</h2>
+                </div>
+                <p>Las visitas también cuentan parte de la historia</p>
+            </div>
+
+            <div class="grilla-actividad">
+                <article class="panel-grafico">
+                    <div class="encabezado-panel">
+                        <h3>Actividad web mes a mes</h3>
+                        <span class="chip">Usuarios activos*</span>
+                    </div>
+
+                    <p>
+                        Clientes identificados distintos + sesiones anónimas.
+                        Responde únicamente al período.
+                    </p>
+
+                    <div id="grafico-usuarios" aria-live="polite"></div>
+                </article>
+
+                <aside class="panel-contexto">
+                    <span class="sobre-titulo">UNA ACLARACIÓN IMPORTANTE</span>
+                    <h3>Una visita no siempre es una persona distinta.</h3>
+
+                    <p>
+                        Un cliente identificado puede navegar varias veces.
+                        También puede haber visitas sin iniciar sesión.
+                    </p>
+
+                    <p>
+                        Contamos clientes identificados distintos y sesiones
+                        anónimas como un indicador combinado de actividad.
+                        No podemos asegurar que cada sesión anónima
+                        pertenezca a una persona diferente.
+                    </p>
+                </aside>
+            </div>
+        </section>
+
+        <section class="seccion" id="clientes"
+                 aria-labelledby="titulo-clientes">
+            <div class="encabezado-seccion">
+                <div>
+                    <span class="sobre-titulo">05 / OPINIÓN DE CLIENTES</span>
+                    <h2 id="titulo-clientes">Después de la compra, su opinión</h2>
+                </div>
+                <p>Qué tan dispuestos están a recomendar EcoBottle</p>
+            </div>
+
+            <div class="grilla-graficos">
+                <article class="panel-grafico">
+                    <div class="encabezado-panel">
+                        <h3>Cómo cambia la recomendación</h3>
+                        <span class="chip">NPS mensual</span>
+                    </div>
+
+                    <p>
+                        Responde a período y canal.
+                        Provincia y producto no se aplican a las encuestas.
+                    </p>
+
+                    <div id="grafico-nps" aria-live="polite"></div>
+                </article>
+
+                <article class="panel-grafico">
+                    <div class="encabezado-panel">
+                        <h3>Las respuestas detrás del número</h3>
+                        <span class="chip">Encuestas</span>
+                    </div>
+
+                    <p>
+                        Detractores: 0–6 · Pasivos: 7–8 · Promotores: 9–10.
+                    </p>
+
+                    <div id="grafico-distribucion" aria-live="polite"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="seccion" id="arquitectura"
+                 aria-labelledby="titulo-arquitectura">
+            <div class="encabezado-seccion">
+                <div>
+                    <span class="sobre-titulo">06 / DETRÁS DE LOS DATOS</span>
+                    <h2 id="titulo-arquitectura">Cómo construimos esta mirada</h2>
+                </div>
+                <p>Del registro original al resultado que ves</p>
+            </div>
+
+            <div class="arquitectura">
+                <article>
+                    <span>01 · ORIGEN</span>
+                    <h3>Los registros</h3>
+                    <p>
+                        CSV de pedidos, productos, clientes,
+                        sesiones y encuestas del caso EcoBottle.
+                    </p>
+                </article>
+
+                <article>
+                    <span>02 · MODELO ESTRELLA</span>
+                    <h3>El contexto</h3>
+                    <p>
+                        Dimensiones y hechos organizan los datos,
+                        sus claves y relaciones.
+                    </p>
+                </article>
+
+                <article>
+                    <span>03 · DATA MARTS</span>
+                    <h3>Los resultados</h3>
+                    <p>
+                        SQL prepara los indicadores y los datos
+                        que necesita el reporte.
+                    </p>
+                </article>
+
+                <article>
+                    <span>04 · DASHBOARD WEB</span>
+                    <h3>La exploración</h3>
+                    <p>
+                        La página lee los datos preparados
+                        y permite recorrerlos mediante filtros.
+                    </p>
+                </article>
+            </div>
+
+            <details class="ayuda-filtros detalle-arquitectura">
+                <summary>Conocer el criterio de cálculo</summary>
+
+                <div class="ayuda-contenido">
+                    <p>
+                        SQL construye el modelo y los marts.
+                        Ticket, Usuarios y NPS se leen de resultados
+                        calculados para cada período.
+                    </p>
+
+                    <p>
+                        La página selecciona esos resultados,
+                        suma importes aditivos de los marts diarios
+                        y dibuja los gráficos. No consulta RAW.
+                    </p>
+
+                    <p>
+                        Las relaciones disponibles determinan qué filtros
+                        pueden aplicarse. No se atribuyen provincias ni
+                        productos a registros que no contienen esos datos.
+                    </p>
+                </div>
+            </details>
+        </section>
+
+        <footer class="pie-pagina">
+            <span>EcoBottle en cifras · Proyecto académico</span>
+            <a href="#resumen">Volver al inicio ↑</a>
+        </footer>
     </main>
 </body>
 </html>
