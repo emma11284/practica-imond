@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EcoBottle — Dashboard comercial</title>
+
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>EcoBottle</h1>
+        <p>Dashboard de análisis comercial</p>
+        <p>
+            Datos del 1 de enero de 2024 al 30 de septiembre de 2025
+            · Importes en ARS
+        </p>
+    </header>
+
+    <section class="filtros" aria-label="Filtros del dashboard">
+        <div>
+            <label for="filtro-periodo">Período de análisis</label>
+            <select id="filtro-periodo">
+                <option value="Todo el período">Todo el período</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="filtro-canal">Canal de venta</label>
+            <select id="filtro-canal">
+                <option value="Todos los canales">Todos los canales</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="filtro-provincia">Provincia</label>
+            <select id="filtro-provincia">
+                <option value="Todas las provincias">
+                    Todas las provincias
+                </option>
+            </select>
+        </div>
+
+        <button id="limpiar-filtros" type="button">
+            Limpiar filtros
+        </button>
+    </section>
+
+    <p class="aclaracion">
+        NPS responde a período y canal.
+        Usuarios activos responde únicamente al período.
+        Ticket promedio incluye IVA y envío.
+    </p>
+
+    <main>
+        <section aria-labelledby="titulo-resumen">
+            <h2 id="titulo-resumen">Resumen ejecutivo</h2>
+
+            <div class="tarjetas">
+                <article class="tarjeta">
+                    <h3>Ventas</h3>
+                    <p id="valor-ventas">—</p>
+                    <small>
+                        Pedidos pagados o completados. Con IVA y envío.
+                    </small>
+                </article>
+
+                <article class="tarjeta">
+                    <h3>Pedidos vendidos</h3>
+                    <p id="valor-pedidos">—</p>
+                    <small>Pedidos pagados o completados.</small>
+                </article>
+
+                <article class="tarjeta">
+                    <h3>Ticket promedio</h3>
+                    <p id="valor-ticket">—</p>
+                    <small>
+                        Importe promedio por pedido válido del período.
+                        Con IVA y envío.
+                    </small>
+                </article>
+
+                <article class="tarjeta">
+                    <h3>Usuarios activos</h3>
+                    <p id="valor-usuarios">—</p>
+                    <small>
+                        Clientes identificados distintos + sesiones anónimas.
+                        No representa personas únicas.
+                    </small>
+                </article>
+
+                <article class="tarjeta">
+                    <h3>NPS</h3>
+                    <p id="valor-nps">—</p>
+                    <small>
+                        Porcentaje de promotores menos porcentaje de
+                        detractores. Escala de −100 a 100 puntos.
+                    </small>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel-grafico">
+            <h2>Evolución mensual de ventas</h2>
+            <p>Pedidos pagados o completados · Con IVA y envío</p>
+
+            <div class="leyenda">
+                <span><i class="color-2024"></i>2024</span>
+                <span><i class="color-2025"></i>2025</span>
+            </div>
+
+            <div id="grafico-ventas" aria-live="polite"></div>
+        </section>
+    </main>
+</body>
+</html>
